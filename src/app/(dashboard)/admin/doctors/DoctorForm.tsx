@@ -24,8 +24,8 @@ const doctorSchema = z.object({
     specialization: z.string().min(2, "Specialization is required"),
     phone: z.string().min(5, "Phone number is required"),
     color_code: z.string().regex(/^#[0-9A-F]{6}$/i, "Must be a valid hex color"),
-    slot_duration: z.coerce.number().min(5, "Minimum slot duration is 5 minutes").max(120, "Maximum slot duration is 120 minutes"),
-    is_active: z.boolean().default(true),
+    slot_duration: z.number().min(5, "Minimum slot duration is 5 minutes").max(120, "Maximum slot duration is 120 minutes"),
+    is_active: z.boolean(),
 })
 
 interface DoctorFormProps {
@@ -98,7 +98,11 @@ export function DoctorForm({ userId, defaultValues, onSuccess }: DoctorFormProps
                             <FormItem>
                                 <FormLabel>Slot Duration (min)</FormLabel>
                                 <FormControl>
-                                    <Input type="number" {...field} />
+                                    <Input
+                                        type="number"
+                                        {...field}
+                                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                                    />
                                 </FormControl>
                                 <FormDescription>Minutes per appointment</FormDescription>
                                 <FormMessage />
